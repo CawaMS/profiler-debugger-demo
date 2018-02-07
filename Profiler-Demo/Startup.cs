@@ -46,6 +46,7 @@ namespace Profiler_Demo
             services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
 
 
+
             services.AddMvc();
         }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Profiler_Demo.Models;
 
@@ -11,6 +12,12 @@ namespace Profiler_Demo.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly TelemetryClient _telemetryClient;
+
+        public HomeController(TelemetryClient telemetryClient)
+        {
+            _telemetryClient = telemetryClient;
+        }
         public IActionResult Index()
         {
             return View();
@@ -24,7 +31,7 @@ namespace Profiler_Demo.Controllers
             for (var i = 0; i < 1000 ; i++)
             {
                 list.Add(new byte[1024]); 
-                Thread.Sleep(100); 
+                Thread.Sleep(50); 
             }
 
 
@@ -46,7 +53,10 @@ namespace Profiler_Demo.Controllers
             }
             catch (Exception e)
             {
-                Trace.WriteLine("An error occurred: " + e);
+
+                Trace.TraceError("An error occurred: " + e);
+
+                _telemetryClient.TrackException(e);
             }
 
             return View();
