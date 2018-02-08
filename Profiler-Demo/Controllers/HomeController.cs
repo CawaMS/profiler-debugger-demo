@@ -28,7 +28,7 @@ namespace Profiler_Demo.Controllers
             ViewData["Message"] = "This webpage has been fetched from Mars ...";
 
             var list = new List<byte[]>();
-            for (var i = 0; i < 1000 ; i++)
+            for (var i = 0; i < 500 ; i++)
             {
                 list.Add(new byte[1024]); 
                 Thread.Sleep(50); 
