@@ -22,7 +22,7 @@ The two features of Application Insights we are experimenting with are:
 
 ### Deploy the sample to Azure
 * Right click on **Profiler-Demo** project, select **Publish ... **
-* Without changing the default **Micrsoft Azure APp Service** and **Create New**, click **Publish** button
+* Without changing the default **Micrsoft Azure App Service** and **Create New**, click **Publish** button
 * Sign-in if needed in the **Create App Service** dialog
 * Accept default generated App Name or edit to use your own Name
 * Select your Subscription
@@ -81,3 +81,30 @@ This sample already includes the code that generate exceptions. All we have to d
 ![Debug in Visual Studio](./media/Debug_VS.png)
 
 ## Identify the code that slowed down your application using Profiler
+Let's generate some traffic load to simulate user load in this application.
+This sample already includes the code that slows down the response time to some particular web request.
+
+* Navigate to your web app. Click **Performance** tab. It might take around 20 seconds to load
+
+![Open Performance page](./media/Performance.png)
+
+* Copy the URL of this webopage
+
+* Go to **Performance Testing** in your Application Insights resource
+
+![Performance Testing](./media/Performance_Testing.png)
+
+* Create a new Manual Test using the URL you copied earlier. Set the test duration to 60 minutes. Go to do something productive during this time ...
+
+* Go to **Performance Testing** to make sure your test finished running
+
+* Go to **Performance Blade**. Click on *GET HOME/About*. Click on **Profiler Traces** under **Take action**
+
+![Performance Blade](./media/Performance_Blade.png)
+
+* Use the Trace Viewer to identify which lines in your application code slowed down the app.
+
+![Trace Viewer](./media/Trace_Viewer.png)
+
+## Send Feedback
+Please fill out this survey and let us know your experience trying this feature. We appreciate your feedback a lot!
