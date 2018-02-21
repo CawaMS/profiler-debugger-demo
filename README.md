@@ -125,7 +125,7 @@ This sample already includes the code that generate exceptions. All we have to d
 
 ![Analyze Snapshot](./media/Analyze_Snapshot.png)
 
-* For a more advanced experience, click on **Download Snapshot** to open snapshot in Visual Studio. The download might take a few seconds. Grab some snacks while waiting :-)
+* For a more advanced experience, click on **Download Snapshot** to open snapshot in Visual Studio.
 
 * Double-click on the downloaded .diagsession file to open in Visual Studio. If prompted, click **Yes** to trust the source
 
