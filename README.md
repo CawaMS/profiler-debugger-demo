@@ -87,7 +87,7 @@ class Startup
 
 ![Website opens in browser](./media/Open-Browser.png)
 
-## Add Application Insights to the App Services
+### Add Application Insights to the App Services
 * Navigate to [Azure Portal](https://portal.azure.com)
 * Go to your App Services Web App resource that hosts your Web Application
 * on the left hand side navigation menu, search *Application Insights* and select **Application Insights** under Monitoring
@@ -96,7 +96,7 @@ class Startup
 
 * If you accept default option **Create new resource**, click **OK** button and follow instructions on the orange banner to restart your web Application
 
-## Identify the root cause of runtime exceptions using Snapshot Debugger
+### Identify the root cause of runtime exceptions using Snapshot Debugger
 Let's generate some exceptions in your web app to simulate when your app throws an exception in production environment.
 This sample already includes the code that generate exceptions. All we have to do is to hit the web page where the exception is thrown.
 * Navigate to your web app. Click on **Contact** tab
@@ -134,21 +134,35 @@ This sample already includes the code that generate exceptions. All we have to d
 
 ![Debug in Visual Studio](./media/Debug_VS.png)
 
-## Identify the code that slowed down your application using Profiler
-Let's generate some traffic load to simulate user load in this application.
-This sample already includes the code that slows down the response time to some particular web request.
+## Part 2: Application Insights Profiler
 
-* Navigate to your web app. Click **Performance** tab. It might take around 20 seconds to load
+### What is Application Insights Profiler
+Application Insights Profiler is a ETW based technology that collects performance information from your web app running process, analyzes the traces and integrates with Azure so Profiler traces are available for a request captured by App Insights. If you used PerfView before, Profiler provides very similar experience.
+
+###  Identify the code that slowed down your application using Profiler
+Assuming you have deployed the web app to Azure. If not, please follow instructions from Part 1 to deploy and enable Application Insights.
+
+This sample already includes the code that slows down the response time to some particular web request. Let's generate some traffic load to simulate user load in this application.
+
+* Navigate to your web app. Click **About** tab. It takes around 10 seconds to load because the code is slowing it down.
 
 ![Open Performance page](./media/Performance.png)
 
-* Copy the URL of this webopage
+* Copy the URL of this webpage
 
 * Go to **Performance Testing** in your Application Insights resource
 
 ![Performance Testing](./media/Performance_Testing.png)
 
-* Create a new Manual Test using the URL you copied earlier. Set the test duration to 60 minutes. Go to do something productive during this time ...
+* Create a new Manual Test using the URL you copied earlier. Set the test duration to 5 minutes.
+
+* Once the test starts running, go to Performance blade to enable Profiler
+    * Note: it is very important to start running the load test first, then enable the profiler to view a profiler trace immediately. Profiler captures a trace immediately after enabled, then it follows the sampling algorithm for 2 minutes per hour to capture traces with minimal impact on the application performance
+
+![Configure Profiler](./media/Configure_Profiler.PNG)
+
+![Enable Profiler](./media/Enable_Profiler.PNG)
+
 
 * Go to **Performance Testing** to make sure your test finished running
 
