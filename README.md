@@ -79,7 +79,7 @@ Enabling snapshot debugger requires:
 
 ![Launch publish dialog](./media/Publish_Dialog.png)
 
-* Without changing the default **Micrsoft Azure App Service** and **Create New**, click **Publish** button
+* Without changing the default **Micr0soft Azure App Service** and **Create New**, click **Publish** button
 * For App Service Plan, click **New** button and select **Size** dropdown in the **Configure App Service Plan** dialog. Please choose **Basic** size tier or higher, and make sure the **RAM** is at least **3.5GB**. Click **OK** and exit this dialog
 
 ![Choose App Services plan](./media/Choose_ASPlan.png)
@@ -117,7 +117,8 @@ This sample already includes the code that generate exceptions. All we have to d
 
 ![Open Debug Snapshot](./media/Open_Debug_Snapshot.png)
 
-* You will see a blade saying **You don't have access**. This is because we made it a requirement for viewing snapshot to require a special permission, since the debug snapshot may contain sensitive information in local variables. Add yourself the permissions by click the button **Add Application Insights Snapshot Debugger Role**
+* You will see a blade saying **You don't have access**. This is because we made it a requirement for viewing snapshot to require a special permission, since the debug snapshot may contain sensitive information in local variables. Add yourself the permissions by click the button **Add Application Insights Snapshot Debugger Role**.
+If you followed the instructions above, you will be the owner of the App Insights resource to add yourself. If you are not the owner then you will not have the privilege to assign yourself this access role - you will need to contact the owner of this App Insights resource to grant you the permissions.
 
 ![Snapshot Permissions](./media/Snapshot_Permission.png)
 
