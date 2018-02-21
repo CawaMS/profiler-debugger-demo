@@ -1,39 +1,93 @@
 # Application Insights Profiler and Snapshot Debugger Sample Demo Web Application
 
 ## Overview
-This walkthrough demonstrates you can easily use [Application Insights](https://azure.microsoft.com/services/application-insights/) to identify the line of code that slowed down the web app, as well as collect a snapshot for your web app and debug through the exceptions.
-The two features of Application Insights we are experimenting with are:
-    * [Application Insights Profiler](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-profiler)
-    * [Application Insights Snapshot Debugger](https://docs.microsoft.com/azure/application-insights/app-insights-snapshot-debugger)
+This walkthrough demonstrates you can easily use [Application Insights](https://azure.microsoft.com/services/application-insights/) to performance code-level diagnostics in your application when your web site experiences runtime exceptions or slow performance.
+There are two parts in the walkthrough introducing two features of Application Insights:
 
-## Clone Sample Code and Deploy to azure
+* [Application Insights Snapshot Debugger](https://docs.microsoft.com/azure/application-insights/app-insights-snapshot-debugger)
 
-### Pre-requisites
+* [Application Insights Profiler](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-profiler)
+
+For the purpose of showing how onboarding works, this walkthrough uses a very simple ASP.NET core web app that simulates runtime exceptions and performance issues using simple logics and APIs. The technology though would work in for more sophisticated apps and hosting envrionments.
+
+## Pre-requisites
 * [Visual Studio 2017](https://www.visualstudio.com/)
     * Install ASP.NET and Web Development
     * To experience the full feature for Snapshot Debugging, you will need Visual Studio 2017 Enterprise. Check Snapshot Debugger in the Optional component list if you are installing Visual Studio Enterprise SKU
-* Azure Subscription
-    * [Getting started for free](https://azure.microsoft.com/free/?v=18.03)
-
-### Setup the sample in your workspace
+* This tutorial showcases features in [Application Insights](https://azure.microsoft.com/en-us/services/application-insights/). Please proceed if you are open to use Application Insights for monitoring your application.
 * Clone or download this repository
-* Open *Profiler-Demo / Profiler-Demo.csproj* file
-* Wait a few seconds for the project dependencies to restore
+    * Open *Debugger-Profiler-Demo / Debugger-Profiler-Demo.csproj* file
+
+## Part 1: Application Insights Snapshot Debugger
+
+### What is Application Insights Snapshot Debugger
+Snapshot Debugger automatically takes a snapshot to record the state of your running application when an exception happens. You can view information such as local variable values from the snapshot.
+
+Snapshot collection is available for:
+* .NET Framework and ASP.NET applications running .NET Framework 4.5 or later.
+* .NET Core 2.0 and ASP.NET Core 2.0 applications running on Windows.
+
+Enabling snapshot debugger requires:
+1. Installing a NuGet package in your web app. The sample already includes it for convenience purpose
+
+    ```
+    Microsoft.ApplicationInsights.SnapshotCollector
+    ```
+2. Add some code in your application to track exceptions. The Startup.cs file already includes the code changes needed. If you use ASP.NET 4.5 or later, please refer to [Debug snapshots on exceptions in .NET apps](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-snapshot-debugger) on how to track exceptions in your code.
+
+    ```csharp
+    using Microsoft.ApplicationInsights.SnapshotCollector;
+    using Microsoft.Extensions.Options;
+    ...
+class Startup
+{
+    private class SnapshotCollectorTelemetryProcessorFactory : ITelemetryProcessorFactory
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public SnapshotCollectorTelemetryProcessorFactory(IServiceProvider serviceProvider) =>
+            _serviceProvider = serviceProvider;
+
+        public ITelemetryProcessor Create(ITelemetryProcessor next)
+        {
+            var snapshotConfigurationOptions = _serviceProvider.GetService<IOptions<SnapshotCollectorConfiguration>>();
+            return new SnapshotCollectorTelemetryProcessor(next, configuration: snapshotConfigurationOptions.Value);
+        }
+    }
+
+    public Startup(IConfiguration configuration) => Configuration = configuration;
+
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Configure SnapshotCollector from application settings
+        services.Configure<SnapshotCollectorConfiguration>(Configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
+
+        // Add SnapshotCollector telemetry processor.
+        services.AddSingleton<ITelemetryProcessorFactory>(sp => new SnapshotCollectorTelemetryProcessorFactory(sp));
+
+        // TODO: Add other services your application needs here.
+    }
+}
+    ```
 
 ### Deploy the sample to Azure
 * Right click on **Profiler-Demo** project, select **Publish ... **
+
+![Launch publish dialog](./media/Publish_Dialog.png)
+
 * Without changing the default **Micrsoft Azure App Service** and **Create New**, click **Publish** button
-* Sign-in if needed in the **Create App Service** dialog
-* Accept default generated App Name or edit to use your own Name
-* Select your Subscription
-* Select a resource group or create a new one by clicking the **New...** button
 * For App Service Plan, click **New** button and select **Size** dropdown in the **Configure App Service Plan** dialog. Please choose **Basic** size tier or higher, and make sure the **RAM** is at least **3.5GB**. Click **OK** and exit this dialog
-* Click **Create** in the **Create App Service** dialog and wait for publish process to finish
-* The site should automatically open in your browser after publishing
+
+![Choose App Services plan](./media/Choose_ASPlan.png)
+
+* Proceed with Publish
 
 ![Website opens in browser](./media/Open-Browser.png)
 
-## Add Application Insights to the App services
+## Add Application Insights to the App Services
 * Navigate to [Azure Portal](https://portal.azure.com)
 * Go to your App Services Web App resource that hosts your Web Application
 * on the left hand side navigation menu, search *Application Insights* and select **Application Insights** under Monitoring
@@ -45,12 +99,12 @@ The two features of Application Insights we are experimenting with are:
 ## Identify the root cause of runtime exceptions using Snapshot Debugger
 Let's generate some exceptions in your web app to simulate when your app throws an exception in production environment.
 This sample already includes the code that generate exceptions. All we have to do is to hit the web page where the exception is thrown.
-* Navigate to your web app. Click on **Error** page
+* Navigate to your web app. Click on **Contact** tab
 
 ![Error](./media/Error.png)
 
-* Refresh the page a few times
-* Wait for a few minutes... (Grab a cup of coffee)
+* Refresh the page a few times to make sure snapshots are captured - the first time exception will not have snapshot because App Insights does not know about the exception type yet to request for a snapshot.
+* Wait for a few minutes for Exceptions to propagate to Application insights resource and for Snapshots to be uploaded
 * Go to App Insights resource you created earlier. It should be in the same resource group as your Web App resource
 * Go to Failures blade, click on **Exceptions** tab. Click **Exception** button under **Take action**
 

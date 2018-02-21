@@ -1,6 +1,6 @@
 using System;
 
-namespace Profiler_Demo.Models
+namespace Debugger_Profiler_demo.Models
 {
     public class ErrorViewModel
     {

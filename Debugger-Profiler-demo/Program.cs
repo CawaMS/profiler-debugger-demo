@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Profiler_Demo
+namespace Debugger_Profiler_demo
 {
     public class Program
     {
