@@ -1,4 +1,4 @@
-# Application Insights Profiler and Snapshot Debugger Sample Demo Web Application
+# Getting Started with Profiler and Snapshot Debugger
 
 ## Overview
 This walkthrough demonstrates you can easily use [Application Insights](https://azure.microsoft.com/services/application-insights/) to performance code-level diagnostics in your application when your web site experiences runtime exceptions or slow performance.
