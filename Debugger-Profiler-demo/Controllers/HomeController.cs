@@ -20,7 +20,9 @@ namespace Debugger_Profiler_demo.Controllers
         {
             ViewData["Message"] = "Your application description page.";
 
-            Thread.Sleep(10000);
+            Random r = new Random();
+            int delay = r.Next(5000, 10000);
+            Thread.Sleep(delay);
 
             return View();
         }
@@ -29,7 +31,7 @@ namespace Debugger_Profiler_demo.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-            var array = new string[10];  
+            var array = new string[10];
 
             for (int i = 0; i < 11; i++)
             {
